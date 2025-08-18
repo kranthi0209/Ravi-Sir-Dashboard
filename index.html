@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muddada's Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #eef2f3, #d9e4f5);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      padding: 40px 20px;
+      background: linear-gradient(90deg, #004e92, #000428);
+      color: white;
+      border-bottom: 5px solid #ffb347;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+    header p {
+      font-size: 1.2rem;
+      margin-top: 10px;
+      font-style: italic;
+    }
+    .section-title {
+      margin: 40px 0 20px;
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #004e92;
+    }
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 0 40px 40px;
+    }
+    .tile {
+      background: white;
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .tile:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+    }
+    .tile h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #00264d;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tile i {
+      font-size: 1.6rem;
+    }
+    .tile p {
+      font-size: 0.95rem;
+      color: #444;
+    }
+
+    /* Modal Styles */
+    .modal-backdrop-custom {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1050;
+    }
+    .modal-card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+      animation: fadeInScale 0.4s ease;
+    }
+    .modal-card h4 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: #004e92;
+    }
+    .modal-card p {
+      font-size: 1rem;
+      color: #333;
+    }
+    .modal-card button {
+      margin-top: 20px;
+      padding: 10px 25px;
+      border: none;
+      background: linear-gradient(90deg, #004e92, #000428);
+      color: white;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .modal-card button:hover {
+      background: linear-gradient(90deg, #0061c2, #001848);
+    }
+    @keyframes fadeInScale {
+      from {opacity: 0; transform: scale(0.8);}
+      to {opacity: 1; transform: scale(1);}
+    }
+    .section-heading {
+  display: inline-block;
+  padding: 10px 25px;
+  background: linear-gradient(135deg, #d6548a, #1c349e);
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  border-radius: 50px;       /* capsule shape */
+  margin: 30px auto 20px auto;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.section-heading:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Muddada Ravichandra (I.A.S)</h1>
+    <p>A place where all my professional stuff is organised</p>
+  </header>
+
+  <div class="section-title"><h2 class="section-heading">Dashboards Developed in my peshi</h2></div>
+  <div class="tiles">
+    <a href="https://ais-officers-service-records.web.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-id-card" style="color:#007bff;"></i>AIS Officers Service Details</h3><p>Detailed service records of AIS officers.</p></a>
+    <a href="https://non-scs.web.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-user-tie" style="color:#28a745;"></i>Non SCS Applicants</h3><p>Information on Non-SCS applicants.</p></a>
+    <a href="https://job-calendar-ap.web.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-users" style="color:#ffc107;"></i>AP Employee Cadre Strength</h3><p>Cadre strength details of AP employees.</p></a>
+    <a href="https://law-officers-tenure-ap.web.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-scale-balanced" style="color:#dc3545;"></i>Law Officers Tenure Monitoring</h3><p>Monitoring of tenure of Law Officers.</p></a>
+    <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-clipboard-list" style="color:#6f42c1;"></i>Manifesto Monitoring Module</h3><p>Tracking implementation of manifesto promises.</p></a>
+    <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-file-signature" style="color:#20c997;"></i>Election Affidavites Analysis</h3><p>Analysis of election affidavits.</p></a>
+    <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-coins" style="color:#fd7e14;"></i>Budget Analysis</h3><p>State budget analysis and insights.</p></a>
+    <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-chart-line" style="color:#17a2b8;"></i>States Own Revenue Analysis</h3><p>Revenue analysis of the state.</p></a>
+    <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-money-check-dollar" style="color:#e83e8c;"></i>Employees Payments Monitoring Module</h3><p>Monitoring employee payments across departments.</p></a>
+  </div>
+
+  <div class="section-title"><h2 class="section-heading">Dash Boards Collected from Departments</h2></div>
+  <div class="tiles">
+    <a href="https://dashboard.abdm.gov.in/abdm/" target="_blank" class="tile"><h3><i class="fa-solid fa-heartbeat" style="color:#dc3545;"></i>Ayushman Bharath Dashboard</h3><p>Healthcare coverage and schemes dashboard.</p></a>
+    <a href="https://dashboard.drntrvaidyaseva.ap.gov.in/" target="_blank" class="tile"><h3><i class="fa-solid fa-hospital" style="color:#17a2b8;"></i>NTR Vaidya Seva Dashboard</h3><p>Health services for citizens.</p></a>
+    <a href="https://apchfw.ap.gov.in/apchfw-dashboard/" target="_blank" class="tile"><h3><i class="fa-solid fa-stethoscope" style="color:#28a745;"></i>Health & Family Welfare Dashboard</h3><p>Comprehensive family health statistics.</p></a>
+    <a href="https://eaushadhiap.dcservices.in/" target="_blank" class="tile"><h3><i class="fa-solid fa-pills" style="color:#6f42c1;"></i>e-Aushadhi Inventory Dashboard</h3><p>Drug inventory management system.</p></a>
+    <a href="https://pfms.nic.in/SitePages/Users/LoginDetails/Login.aspx" target="_blank" class="tile"><h3><i class="fa-solid fa-wallet" style="color:#20c997;"></i>Public Financial Management System</h3><p>Tracking of state finances.</p></a>
+    <a href="https://cfms.ap.gov.in/" target="_blank" class="tile"><h3><i class="fa-solid fa-sack-dollar" style="color:#fd7e14;"></i>Comprehensive Financial Management System</h3><p>End-to-end financial monitoring.</p></a>
+    <a href="https://nidhi.apcfss.in/login" target="_blank" class="tile"><h3><i class="fa-solid fa-gem" style="color:#e83e8c;"></i>Nidhi Portal</h3><p>A Dashboard on HR data of Andhra Pradesh</p></a>
+    <a href="https://epos.ap.gov.in/PowerBI/Dashboard.jsp" target="_blank" class="tile"><h3><i class="fa-solid fa-truck" style="color:#007bff;"></i>Civil Supplies Corporation</h3><p>Monitoring of civil supplies distribution.</p></a>
+    <a href="https://aptis.apct.gov.in/apdashboard/" target="_blank" class="tile"><h3><i class="fa-solid fa-receipt" style="color:#28a745;"></i>Commercial Tax Dashboard</h3><p>Tracking state tax collections and analysis.</p></a>
+    <a href="https://rtgslens.ap.gov.in/RTGSAngular/#/" target="_blank" class="tile"><h3><i class="fa-solid fa-eye" style="color:#6f42c1;"></i>RTGS Lens</h3><p>An integrated dashboard for Chief Minister's review</p></a>
+  </div>
+
+  <div class="section-title"><h2 class="section-heading">My Own Personal Stuff</h2></div>
+  <div class="tiles">
+    <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-image" style="color:#17a2b8;"></i>My Gallery</h3><p>One place to view some of my photo collections</p></a>
+    <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-calendar-days" style="color:#007bff;"></i>My Schedules</h3><p>Upcoming Appointments and meetings</p></a>
+    <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-envelope-open-text" style="color:#fd7e14;"></i>My TTD Letters</h3><p>A report which helps in planning the issue of TTD Letters</p></a>
+    <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-bell" style="color:#dc3545;"></i>My Reminders</h3><p>All my key tasks which need special attention</p></a>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-backdrop-custom" id="customModal">
+    <div class="modal-card">
+      <h4>🚧 Dashboard Under Development</h4>
+      <p>This dashboard is currently under development.<br>Please visit the site later.</p>
+      <button onclick="closeModal()">Okay</button>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('customModal');
+    const tiles = document.querySelectorAll('.tile');
+
+    tiles.forEach(tile => {
+      tile.addEventListener('click', function(e) {
+        if (this.getAttribute('href') === '#') {
+          e.preventDefault();
+          modal.style.display = 'flex';
+        }
+      });
+    });
+
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+  </script>
+</body>
+</html>
