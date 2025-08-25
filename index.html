@@ -1,297 +1,1535 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Muddada's Dashboard</title>
-  <link rel="icon" type="image/JPG" href="Capture.JPG">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minister's e-File Clearance KPI Dashboard</title>
   <style>
-    body {
-      background: linear-gradient(135deg, #eef2f3, #d9e4f5);
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
+    :root{
+      --bg:#0f172a; /* slate-900 */
+      --card:#111827ee; /* gray-900 */
+      --muted:#94a3b8; /* slate-400 */
+      --text:#ebebe5; /* gray-200 */
+      --accent:#22d3ee; /* cyan-400 */
+      --accent-2:#a78bfa; /* violet-400 */
+      --good:#10b981; /* emerald */
+      --warn:#f59e0b; /* amber */
+      --bad:#ef4444; /* red */
+      --chip:#1f2937; /* gray-800 */
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
     }
-    header {
-      text-align: center;
-      padding: 40px 20px;
-      background: linear-gradient(90deg, #004e92, #000428);
-      color: white;
-      border-bottom: 5px solid #ffb347;
-    }
-    header h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-    }
-    header p {
-      font-size: 1.2rem;
-      margin-top: 10px;
-      font-style: italic;
-    }
-    .tiles {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      padding: 20px 40px 40px;
-    }
-    .tile {
-      background: white;
-      border-radius: 16px;
-      padding: 25px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      cursor: pointer;
-      text-decoration: none;
-      color: inherit;
-      display: block;
-      position: relative;
-      overflow: hidden;
-    }
-    .tile:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.2);
-    }
-    .tile h3 {
-      font-size: 1.3rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: #00264d;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .tile i {
-      font-size: 1.6rem;
-    }
-    .tile p {
-      font-size: 0.95rem;
-      color: #444;
-    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#0b1022, #0f172a);color:var(--text);font:14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, 'Helvetica Neue', Arial}
+    .wrap{max-width:1300px;margin:24px auto;padding:0 16px 60px}
+    header{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:16px}
+    .title{font-size:32px;font-weight:700;letter-spacing:.2px}
+    .sub{color:var(--muted);font-size:12px}
+    .bar{display:flex;gap:10px;flex-wrap:wrap}
+    .card{background:linear-gradient(180deg, #0f172acc, #0b1022cc);border:1px solid #1f2937;border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+    .uploader{display:flex;gap:10px;flex-wrap:wrap}
+    input[type=file]{display:none}
+    .btn{cursor:pointer;background:linear-gradient(90deg,#1f2937,#0b1022);border:1px solid #263244;color:var(--text);padding:10px 14px;border-radius:12px;display:inline-flex;gap:8px;align-items:center;font-weight:600}
+    .btn:hover{border-color:#334155;transform:translateY(-1px)}
+    .btn:active{transform:translateY(0)}
+    .filters{display:grid;grid-template-columns:repeat(12,1fr);gap:10px;margin:14px 0}
+    .filters .card{padding:10px}
+    .filters label{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}
+    .filters input,.filters select{width:100%;padding:10px;background:var(--chip);border:1px solid #334155;color:var(--text);border-radius:10px;outline:none}
+    .filters .pill{display:inline-flex;align-items:center;gap:6px;background:#0b1224;border:1px solid #1f2a44;color:var(--muted);padding:8px 10px;border-radius:999px}
 
-    /* Modal Styles */
-    .modal-backdrop-custom {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(6px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1050;
-    }
-    .modal-card {
-      background: white;
-      border-radius: 20px;
-      padding: 30px;
-      max-width: 500px;
-      text-align: center;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
-      animation: fadeInScale 0.4s ease;
-    }
-    .modal-card h4 {
-      font-size: 1.5rem;
-      margin-bottom: 15px;
-      color: #004e92;
-    }
-    .modal-card p {
-      font-size: 1rem;
-      color: #333;
-    }
-    .modal-card button {
-      margin-top: 20px;
-      padding: 10px 25px;
-      border: none;
-      background: linear-gradient(90deg, #004e92, #000428);
-      color: white;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .modal-card button:hover {
-      background: linear-gradient(90deg, #0061c2, #001848);
-    }
-    @keyframes fadeInScale {
-      from {opacity: 0; transform: scale(0.8);}
-      to {opacity: 1; transform: scale(1);}
-    }
+    .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:16px 0 8px}
+    .kpi{padding:16px;border-radius:var(--radius);background:radial-gradient(1200px 300px at -200px -200px, #164e63aa, transparent),linear-gradient(180deg,#0b1022,#0f172a);border:1px solid #1f2937;box-shadow:var(--shadow)}
+    .kpi .label{color:var(--muted);font-size:12px}
+    .kpi .value{font-size:22px;font-weight:800;margin-top:6px}
+    .kpi .delta{font-size:11px;color:var(--muted)}
 
-    /* Banners */
-    .banner {
-      position: absolute;
-      color: white;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 5px 45px;
-      text-align: center;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-      z-index: 10;
-    }
-    .banner.live {
-      top: 12px;
-      right: -40px;
-      transform: rotate(45deg);
-      background: #28a745;
-      animation: blink 1.5s infinite;
-    }
-    .banner.dev {
-      top: 0;
-      right: 0;
-      transform: none;
-      background: #dc3545;
-      padding: 4px 10px;
-      font-size: 0.7rem;
-      border-bottom-left-radius: 6px;
-    }
-    @keyframes blink {
-      0%, 50%, 100% { opacity: 1; }
-      25%, 75% { opacity: 0.4; }
-    }
+    .grid{margin-top:14px}
+    table{width:100%;border-collapse:separate;border-spacing:0 8px}
+    thead th{font-size:12px;color:var(--muted);text-align:left;padding:0 10px}
+    tbody tr{background:linear-gradient(180deg,#0b1022,#0f172a);border:1px solid #1f2937}
+    tbody td{padding:12px 10px;border-top:1px solid #1f2937;border-bottom:1px solid #1f2937}
+    tbody tr td:first-child{border-left:1px solid #1f2937;border-top-left-radius:12px;border-bottom-left-radius:12px}
+    tbody tr td:last-child{border-right:1px solid #1f2937;border-top-right-radius:12px;border-bottom-right-radius:12px}
+    .tag{display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid #243041;background:#0d152b;font-size:11px;color:#cbd5e1}
+    .number{text-align:right;font-variant-numeric:tabular-nums}
+    .link{color:var(--accent);cursor:pointer}
 
-    /* Custom Tabs Styling */
-.nav-tabs {
-  border-bottom: none; /* remove default line */
-  margin-top: 20px;
+    .chips{display:flex;gap:6px;flex-wrap:wrap}
+
+    /* Modal */
+    .modal{position:fixed;inset:0;background:rgba(2,6,23,.6);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:24px;z-index:50}
+    .modal.open{display:flex}
+    .modal .box{width:min(1050px,95vw);max-height:85vh;overflow:auto;background:#0b1224;border:1px solid #1f2937;border-radius:18px;box-shadow:var(--shadow);padding:16px}
+    .box h3{margin:6px 0 10px}
+    .rows{display:grid;gap:8px}
+    .row{display:grid;grid-template-columns:120px 1fr;gap:10px;padding:10px;border:1px solid #1f2937;background:#0b1022;border-radius:12px}
+    .row .label{color:var(--muted)}
+
+    .footer{margin-top:14px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px}
+    .hidden{display:none}
+
+    /* ===== Loading Modal ===== */
+.loading-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 12, 121, 0.95);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  animation: fadeIn 0.5s ease-in-out;
+}
+.loading-box {
+  text-align: center;
+  padding: 30px 40px;
+  background: linear-gradient(180deg,#111827,#0f172a);
+  border: 1px solid #1f2937;
+  border-radius: 20px;
+  color: var(--text);
+  box-shadow: var(--shadow);
+  max-width: 450px;
+  animation: popIn 0.6s ease-in-out;
+}
+.loading-box h2 {
+  margin: 12px 0;
+  font-size: 20px;
+  color: var(--accent-2);
+}
+.loading-box p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.loading-box .highlight {
+  color: var(--accent);
+  font-weight: bold;
+}
+.loader-icon {
+  font-size: 42px;
+  animation: bounce 1.5s infinite;
+}
+.loader {
+  margin: 16px auto 0;
+  width: 50px;
+  height: 50px;
+  border: 5px solid #334155;
+  border-top: 5px solid var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
-.nav-tabs .nav-link {
-  border: none;
-  border-radius: 50px;
-  padding: 10px 25px;
-  margin: 5px;
+/* Animations */
+@keyframes spin { 100% { transform: rotate(360deg);} }
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+@keyframes popIn {
+  0%{ transform: scale(0.9); opacity:0; }
+  100%{ transform: scale(1); opacity:1; }
+}
+/* ===== Mobile Responsive ===== */
+@media (max-width: 900px) {
+  .filters {
+    grid-template-columns: repeat(2,1fr);
+  }
+  .kpis {
+    grid-template-columns: repeat(2,1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  body { font-size: 13px; }
+  .wrap { padding: 0 8px 40px; }
+  header .title { font-size: 18px; }
+  .filters { grid-template-columns: 1fr; }
+  .kpis {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 6px 0 10px;
+    scrollbar-width: none; /* Firefox */
+  }
+  .kpis::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+  .kpi {
+    min-width: 180px;
+    flex: 0 0 auto;
+  }
+  table, thead, tbody, th, td, tr { display: block; }
+  thead { display: none; }
+  tbody tr { margin-bottom: 12px; border-radius: var(--radius); overflow: hidden; }
+  tbody td {
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 10px;
+    border-bottom: 1px solid #1f2937;
+  }
+  tbody td:before {
+    content: attr(data-label);
+    color: var(--muted);
+    font-size: 11px;
+    margin-right: 8px;
+  }
+}
+.multi-select {
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 6px;
+  background: var(--chip);
+  max-height: 200px;
+  overflow-y: auto;
+  display: block;
+}
+.multi-select label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text);
+  padding: 4px 2px;
+  cursor: pointer;
+}
+.multi-select input[type=checkbox] {
+  accent-color: var(--accent);
+}
+.multi-select-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-header {
+  background: var(--chip);
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--text);
+  user-select: none;
+  border: 1px solid #334155;
+}
+
+.dropdown-body {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--chip);
+  border: 1px solid #334155;
+  max-height: 300px;
+  overflow-y: auto;
+  border-radius: 10px;
+  margin-top: 2px;
+  z-index: 10;
+  padding: 8px;
+}
+
+.dropdown-body.hidden {
+  display: none;
+}
+
+.dropdown-controls {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.dropdown-controls button {
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #0b1224;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.dropdown-controls input[type=text] {
+  flex: 1;
+  padding: 4px 6px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #0b1224;
+  color: var(--text);
+  font-size: 12px;
+}
+
+.multi-select label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text);
+  padding: 4px 2px;
+  cursor: pointer;
+}
+.hidden { display: none; }
+
+/* Hide the entire Employee filter card */
+.card:has(#employeeSelectContainer) {
+  display: none !important;
+}
+.kpis {
+  background: linear-gradient(180deg, #0b1224, #111827);
+  border: 1px solid #334155;
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 16px;
+  box-shadow: var(--shadow);
+}
+
+/* Header on its own line */
+.kpi-section-header {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent-2);
+  margin: 0 0 16px 0; /* spacing below header */
+  white-space: nowrap;
+}
+
+/* Widgets in next line */
+.kpi-container {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Each widget expands evenly */
+.kpi-container .kpi {
+  flex: 1;           /* expand to fill container */
+  min-width: 140px;  /* prevents widgets from being too narrow */
+  text-align: center;
+}
+
+/* Responsive design */
+@media (max-width: 900px) {
+  .kpi-container .kpi { flex: 0 0 calc(50% - 6px); } /* 2 per row */
+}
+
+@media (max-width: 600px) {
+  .kpi-container .kpi { flex: 0 0 100%; } /* stacked vertically */
+}
+
+.pending-section {
+  background: linear-gradient(180deg, #0b1224, #111827);
+  border: 1px solid #334155;
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 16px;
+  box-shadow: var(--shadow);
+}
+
+/* Header in one line */
+.pending-header-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.pending-section h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ee8da0;
+  margin: 0;
+  white-space: nowrap; /* keep header in one line */
+}
+
+/* KPIs stretch evenly across the section */
+.pending-kpis {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap; /* allow wrapping on smaller screens */
+}
+
+.pending-kpis .kpi {
+  flex: 1; /* each KPI takes equal width */
+  min-width: 120px; /* prevents being too narrow */
+  text-align: center;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .pending-kpis .kpi {
+    flex: 0 0 calc(33.33% - 8px); /* 3 per row with gap */
+  }
+}
+
+@media (max-width: 600px) {
+  .pending-kpis .kpi {
+    flex: 0 0 calc(50% - 6px); /* 2 per row with gap */
+  }
+}
+
+@media (max-width: 400px) {
+  .pending-kpis .kpi {
+    flex: 0 0 100%; /* stacked vertically */
+  }
+}
+.basic-section {
+  background: linear-gradient(180deg, #0b1224, #111827);
+  border: 1px solid #334155;
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 16px;
+  box-shadow: var(--shadow);
+}
+
+/* Header in one line */
+.basic-header-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.basic-section h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #e9f18c;
+  margin: 0;
+  white-space: nowrap; /* keep header in one line */
+}
+
+/* KPIs stretch evenly across the section */
+.basic-kpis {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap; /* allow wrapping on smaller screens */
+}
+
+.basic-kpis .kpi {
+  flex: 1; /* each KPI takes equal width */
+  min-width: 120px; /* prevents being too narrow */
+  text-align: center;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .basic-kpis .kpi {
+    flex: 0 0 calc(33.33% - 8px); /* 3 per row with gap */
+  }
+}
+
+@media (max-width: 600px) {
+  .basic-kpis .kpi {
+    flex: 0 0 calc(50% - 6px); /* 2 per row with gap */
+  }
+}
+
+@media (max-width: 400px) {
+  .basic-kpis .kpi {
+    flex: 0 0 100%; /* stacked vertically */
+  }
+}
+
+.processed-section {
+  background: linear-gradient(180deg, #0b1224, #111827);
+  border: 1px solid #334155;
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 16px;
+  box-shadow: var(--shadow);
+}
+
+/* Header in one line */
+.processed-header-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.processed-section h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f190e6;
+  margin: 0;
+  white-space: nowrap; /* keep header in one line */
+}
+
+/* KPIs stretch evenly across the section */
+.processed-kpis {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap; /* allow wrapping on smaller screens */
+}
+
+.processed-kpis .kpi {
+  flex: 1; /* each KPI takes equal width */
+  min-width: 120px; /* prevents being too narrow */
+  text-align: center;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .basic-kpis .kpi {
+    flex: 0 0 calc(33.33% - 8px); /* 3 per row with gap */
+  }
+}
+
+@media (max-width: 600px) {
+  .basic-kpis .kpi {
+    flex: 0 0 calc(50% - 6px); /* 2 per row with gap */
+  }
+}
+
+@media (max-width: 400px) {
+  .basic-kpis .kpi {
+    flex: 0 0 100%; /* stacked vertically */
+  }
+}
+.details-section {
+  background: linear-gradient(180deg, #0b1224, #111827);
+  border: 1px solid #334155;
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 16px;
+  box-shadow: var(--shadow);
+}
+
+/* Header in one line */
+.details-header-wrapper {
+  display: flex;
+  justify-content: flex-start ;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.details-section h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #93ec90;
+  margin: 0;
+  white-space: nowrap; /* keep header in one line */
+}
+/* Scrollable container */
+.table-wrapper {
+  max-width: 100%;
+  max-height: 500px;      /* vertical limit */
+  overflow-x: auto;       /* horizontal scroll */
+  overflow-y: auto;       /* vertical scroll */
+  border: 1px solid #1e293b;
+  position: relative;
+}
+
+/* Table */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: max-content;
+  min-width: 100%;
+}
+
+/* Sticky top-left cell */
+thead th:first-child {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 10; /* higher than header row and first column */
+  background: #000205; /* solid background to cover stripes */
+}
+
+/* Sticky header row */
+thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #000205;
+  color: #e5e7eb;
+  text-align: center;
   font-weight: 600;
-  font-size: 1rem;
-  color: #004e92;
-  background: white;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
+  font-size: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
-.nav-tabs .nav-link:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-  color: #000428;
+/* Sticky first column */
+tbody td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 6;
+  background: #000205; /* match header background for clean look */
+  font-weight: 600;
 }
 
-.nav-tabs .nav-link.active {
-  background: linear-gradient(90deg, #004e92, #6e117a);
-  color: white !important;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+
+/* Alternate striping for rows */
+tbody tr:nth-child(odd) td {
+  background: rgba(255, 255, 255, 0.02);
+}
+tbody tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Ensure sticky first column follows striping */
+tbody tr:nth-child(odd) td:first-child {
+  background: #0f172a;
+  z-index: 6;
+}
+tbody tr:nth-child(even) td:first-child {
+  background: #121c31;
+  z-index: 6;
+}
+/* First column left aligned */
+tbody td:first-child,
+thead th:first-child {
+  text-align: left;
+  padding-left: 12px;
+}
+
+/* All other columns center aligned */
+tbody td:not(:first-child),
+thead th:not(:first-child) {
+  text-align: center;
+}
+
+/* Column-specific widths */
+th:nth-child(1), td:nth-child(1) { 
+  min-width: 150px;   /* Employee */
+}
+
+th:nth-child(2), td:nth-child(2) { 
+  min-width: 80px;    /* Opening */
+  text-align: right;
+}
+
+th:nth-child(3), td:nth-child(3) { 
+  min-width: 80px;    /* Received */
+  text-align: right;
+}
+
+th:nth-child(4), td:nth-child(4) { 
+  min-width: 80px;    /* Processed */
+  text-align: right;
+}
+
+th:nth-child(5), td:nth-child(5) { 
+  min-width: 80px;   /* Processed ≤1d */
+  text-align: right;
+}
+
+th:nth-child(6), td:nth-child(6) { 
+  min-width: 80px;   /* Processed ≤2d */
+  text-align: right;
+}
+
+th:nth-child(7), td:nth-child(7) { 
+  min-width: 80px;   /* Processed ≤3d */
+  text-align: right;
+}
+
+th:nth-child(8), td:nth-child(8) { 
+  min-width: 80px;   /* Processed ≤1w */
+  text-align: right;
+}
+
+th:nth-child(9), td:nth-child(9) { 
+  min-width: 80px;   /* Processed ≤1m */
+  text-align: right;
+}
+
+th:nth-child(10), td:nth-child(10) { 
+  min-width: 110px;   /* Processed >1m */
+  text-align: right;
+}
+
+th:nth-child(11), td:nth-child(11) { 
+  min-width: 80px;    /* Closing */
+  text-align: right;
+}
+
+th:nth-child(12), td:nth-child(12) { 
+  min-width: 120px;   /* Avg Time */
+  text-align: right;
+}
+
+th:nth-child(13), td:nth-child(13) { 
+  min-width: 120px;   /* Median Time */
+  text-align: right;
+}
+
+th:nth-child(14), td:nth-child(14) { 
+  min-width: 80px;   /* Active Files */
+  text-align: right;
+}
+
+th:nth-child(15), td:nth-child(15) { 
+  min-width: 80px;   /* Pending >7d */
+  text-align: right;
+}
+
+th:nth-child(16), td:nth-child(16) { 
+  min-width: 80px;   /* Pending >15d */
+  text-align: right;
+}
+
+th:nth-child(17), td:nth-child(17) { 
+  min-width: 80px;   /* Pending >30d */
+  text-align: right;
+}
+
+th:nth-child(18), td:nth-child(18) { 
+  min-width: 80px;   /* Pending >60d */
+  text-align: right;
+}
+
+th:nth-child(19), td:nth-child(19) { 
+  min-width: 80px;   /* Pending >90d */
+  text-align: right;
+}
+
+th:nth-child(20), td:nth-child(20) { 
+  min-width: 80px;   /* Pending >120d */
+  text-align: right;
 }
 
   </style>
 </head>
 <body>
-  <header>
-    <h1>Muddada Ravichandra (I.A.S)</h1>
-    <p>A place where all my professional stuff is organised</p>
-  </header>
+<div class="loading-modal" id="loadingModal">
+  <div class="loading-box">
+    <div class="loader-icon">📂</div>
+    <h2>Dear User</h2>
+    <p>
+  The dashboard is currently loading a large dataset.
+  This may take a few moments — thank you for your patience
+  Once ready, you’ll have access to an <b>intuitive</b> and user-friendly<br/>
+  <span class="highlight">Minister’s e-Office File Clearance Dashboard</span>.
+</p>
+    <div class="loader"></div>
+  </div>
+</div>
 
-  <!-- Tabs -->
-  <ul class="nav nav-tabs justify-content-center mt-3" id="dashboardTabs" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="developed-tab" data-bs-toggle="tab" data-bs-target="#developed" type="button" role="tab">Dashboards Developed in My Peshi</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="collected-tab" data-bs-toggle="tab" data-bs-target="#collected" type="button" role="tab">Dashboards Collected from Departments</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button" role="tab">My Personal Stuff</button>
-    </li>
-  </ul>
+  <div class="wrap">
+    <header>
+      <div>
+        <div class="title">Ministers e-File Clearance KPI Dashboard</div>
+        <div class="sub">An illustation of the e-file clearance pattern of all the ministers</div>
+      </div>
+      
+    </header>
 
-  <!-- Tab Content -->
-  <div class="tab-content p-4" id="dashboardTabsContent">
+    <section class="filters">
+      <div class="card" style="grid-column: span 3">
+        <label>Start Date</label>
+        <input type="date" id="startDate" />
+      </div>
+      <div class="card" style="grid-column: span 3">
+        <label>End Date</label>
+        <input type="date" id="endDate" />
+      </div>
+      <div class="card" style="grid-column: span 3">
+  <label>Select Employees</label>
+  <div class="multi-select-dropdown">
+    <div class="dropdown-header" id="employeeDropdownHeader">Choose Employees ▼</div>
+    <div class="dropdown-body hidden" id="employeeSelectContainer">
+      <div class="dropdown-controls">
+        <button type="button" id="selectAllEmp">Select All</button>
+        <button type="button" id="deselectAllEmp">Deselect All</button>
+        <input type="text" id="searchEmp" placeholder="Search employees..." />
+      </div>
+      <div class="multi-select" id="employeeSelect">
+        <!-- checkboxes will be populated here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+      <div class="card" style="grid-column: span 3">
+        <label>Subject contains</label>
+        <input id="subjectInput" placeholder="e.g., Transfer of IAS Officers" />
+      </div>
+      <div class="card" style="grid-column: span 3">
+        <label>Computer No</label>
+        <input id="compInput" placeholder="e.g., 211206" />
+      </div>
+      
+      
+    </section>
+
+   <section class="basic-section">
+  <div class="basic-header-wrapper">
+    <h2>Basic KPIs of Ministers on  e-File clearance</h2>
+  </div>
+
+  <div class="basic-kpis">
+    <div class="kpi"><div class="label">Opening Balance</div><div class="value" id="k_open">-</div><div class="delta" id="k_open_hint"></div></div>
+    <div class="kpi"><div class="label">Files Received</div><div class="value" id="k_recv">-</div><div class="delta" id="k_recv_hint"></div></div>
+    <div class="kpi"><div class="label">Files Processed</div><div class="value" id="k_proc">-</div><div class="delta" id="k_proc_hint"></div></div>
+    <div class="kpi"><div class="label">Closing Balance</div><div class="value" id="k_close">-</div><div class="delta" id="k_close_hint"></div></div>
+    <div class="kpi"><div class="label">Avg Processing Time</div><div class="value" id="k_avg">-</div><div class="delta">(of files processed in selected date range)</div></div>
+    <div class="kpi"><div class="label">Median Processing Time</div><div class="value" id="k_med">-</div><div class="delta">(of files processed in selected date range)</div></div>
+  </div>
+</section>
+
+<section class="processed-section">
+  <div class="processed-header-wrapper">
+    <h2>KPIs based on the files processed by Ministers</h2>
+  </div>
+
+  <div class="processed-kpis">
+
+<div class="kpi"><div class="value" id="k_proc1d"></div><div class="label">Processed ≤ 1d</div></div>
+<div class="kpi"><div class="value" id="k_proc2d"></div><div class="label">Processed ≤ 2d</div></div>
+<div class="kpi"><div class="value" id="k_proc3d"></div><div class="label">Processed ≤ 3d</div></div>
+<div class="kpi"><div class="value" id="k_proc1w"></div><div class="label">Processed ≤ 1w</div></div>
+<div class="kpi"><div class="value" id="k_proc1m"></div><div class="label">Processed ≤ 1m</div></div>
+<div class="kpi"><div class="value" id="k_procGt1m"></div><div class="label">Processed > 1m</div></div>
+
+</div>
+</section>
+
+<section class="pending-section">
+  <div class="pending-header-wrapper">
+    <h2 id="pendingHeader">Pendency of files in the login of the ministers as on -</h2>
+  </div>
+
+  <div class="pending-kpis">
+    <div class="kpi"><div class="label">Pending > 7 Days</div><div class="value" id="k_p7">-</div></div>
+    <div class="kpi"><div class="label">Pending > 15 Days</div><div class="value" id="k_p15">-</div></div>
+    <div class="kpi"><div class="label">Pending > 30 Days</div><div class="value" id="k_p30">-</div></div>
+    <div class="kpi"><div class="label">Pending > 60 Days</div><div class="value" id="k_p60">-</div></div>
+    <div class="kpi"><div class="label">Pending > 90 Days</div><div class="value" id="k_p90">-</div></div>
+    <div class="kpi"><div class="label">Pending > 120 Days</div><div class="value" id="k_p120">-</div></div>
+  </div>
+</section>
+
+
+
+
+
+<section class="details-section">
+  <div class="details-header-wrapper">
+    <h1>Minister wise e-Office KPI summary</h1>
+  </div>
+  <div style="margin: 10px 0;">
+  <input id="tableSearch" type="text" placeholder="Search Minister..." style="padding:8px; width:350px;background-color: #bdbfc3;">
+</div>
+    <section class="grid">
+  <div class="table-wrapper">
     
-    <!-- Developed Section -->
-    <div class="tab-pane fade show active" id="developed" role="tabpanel">
-      <div class="tiles">
-        <a href="https://ais-officers-service-records.web.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-id-card" style="color:#007bff;"></i>AIS Officers Service Details</h3><p>Detailed service records of AIS officers.</p></a>
-        <a href="https://non-scs.web.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-user-tie" style="color:#28a745;"></i>Non SCS Applicants</h3><p>Information on Non-SCS applicants.</p></a>
-        <a href="https://job-calendar-ap.web.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-users" style="color:#ffc107;"></i>AP Employee Cadre Strength</h3><p>Cadre strength details of AP employees.</p></a>
-        <a href="https://law-officers-tenure-ap.web.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-scale-balanced" style="color:#dc3545;"></i>Law Officers Tenure Monitoring</h3><p>Monitoring of tenure of Law Officers.</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-clipboard-list" style="color:#6f42c1;"></i>Manifesto Monitoring Module</h3><p>Tracking implementation of manifesto promises.</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-file-signature" style="color:#20c997;"></i>Election Affidavites Analysis</h3><p>Analysis of election affidavits.</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-coins" style="color:#fd7e14;"></i>Budget Analysis</h3><p>State budget analysis and insights.</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-chart-line" style="color:#17a2b8;"></i>States Own Revenue Analysis</h3><p>Revenue analysis of the state.</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-money-check-dollar" style="color:#e83e8c;"></i>Employees Payments Monitoring Module</h3><p>Monitoring employee payments across departments.</p></a>
-        <a href="https://eoffice-ministers.netlify.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-desktop" style="color:#055802;"></i>Ministers e-Office KPIs</h3><p>A Dashboard which illustrates the file clearing KPIs of all the Ministers across all the Departments</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-computer" style="color:#6e030c;"></i>Secretaries & HoDs e-Office KPIs</h3><p>Performance of all Secretaries & HoDs interms of file clearance KPIs</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-desktop" style="color:#09bfcc;"></i>CMO e-Office Dashboard</h3><p>A Dashboard on file clearance pattern in CMO</p></a>
-      </div>
-    </div>
 
-    <!-- Collected Section -->
-    <div class="tab-pane fade" id="collected" role="tabpanel">
-      <div class="tiles">
-        <a href="https://dashboard.abdm.gov.in/abdm/" target="_blank" class="tile"><h3><i class="fa-solid fa-heartbeat" style="color:#dc3545;"></i>Ayushman Bharath Dashboard</h3><p>Healthcare coverage and schemes dashboard.</p></a>
-        <a href="https://dashboard.drntrvaidyaseva.ap.gov.in/" target="_blank" class="tile"><h3><i class="fa-solid fa-hospital" style="color:#17a2b8;"></i>NTR Vaidya Seva Dashboard</h3><p>Health services for citizens.</p></a>
-        <a href="https://apchfw.ap.gov.in/apchfw-dashboard/" target="_blank" class="tile"><h3><i class="fa-solid fa-stethoscope" style="color:#28a745;"></i>Health & Family Welfare Dashboard</h3><p>Comprehensive family health statistics.</p></a>
-        <a href="https://eaushadhiap.dcservices.in/" target="_blank" class="tile"><h3><i class="fa-solid fa-pills" style="color:#6f42c1;"></i>e-Aushadhi Inventory Dashboard</h3><p>Drug inventory management system.</p></a>
-        <a href="https://pfms.nic.in/SitePages/Users/LoginDetails/Login.aspx" target="_blank" class="tile"><h3><i class="fa-solid fa-wallet" style="color:#20c997;"></i>Public Financial Management System</h3><p>Tracking of state finances.</p></a>
-        <a href="https://cfms.ap.gov.in/" target="_blank" class="tile"><h3><i class="fa-solid fa-sack-dollar" style="color:#fd7e14;"></i>Comprehensive Financial Management System</h3><p>End-to-end financial monitoring.</p></a>
-        <a href="https://nidhi.apcfss.in/login" target="_blank" class="tile"><h3><i class="fa-solid fa-gem" style="color:#e83e8c;"></i>Nidhi Portal</h3><p>A Dashboard on HR data of Andhra Pradesh</p></a>
-        <a href="https://epos.ap.gov.in/PowerBI/Dashboard.jsp" target="_blank" class="tile"><h3><i class="fa-solid fa-truck" style="color:#007bff;"></i>Civil Supplies Corporation</h3><p>Monitoring of civil supplies distribution.</p></a>
-        <a href="https://aptis.apct.gov.in/apdashboard/" target="_blank" class="tile"><h3><i class="fa-solid fa-receipt" style="color:#28a745;"></i>Commercial Tax Dashboard</h3><p>Tracking state tax collections and analysis.</p></a>
-        <a href="https://rtgslens.ap.gov.in/RTGSAngular/#/" target="_blank" class="tile"><h3><i class="fa-solid fa-eye" style="color:#6f42c1;"></i>RTGS Lens</h3><p>An integrated dashboard for Chief Minister's review</p></a>
-      </div>
-    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Minister's Name</th>
+          <th class="number">Avg Time</th>
+          <th class="number">Median Time</th>
+          <th class="number">Opening</th>
+          <th class="number">Received</th>
+          <th class="number">Processed</th>
+          <th class="number">Closing</th>
+          <th class="number">Processed ≤1d</th>
+          <th class="number">Processed ≤2d</th>
+          <th class="number">Processed ≤3d</th>
+          <th class="number">Processed ≤1w</th>
+          <th class="number">Processed ≤1m</th>
+          <th class="number">Processed &gt;1m</th>          
+          <th class="number">Pending Files</th>
+          <th class="number">Pending &gt;7d</th>
+          <th class="number">Pending &gt;15d</th>
+          <th class="number">Pending &gt;30d</th>
+          <th class="number">Pending &gt;60d</th>
+          <th class="number">Pending &gt;90d</th>
+          <th class="number">Pending &gt;120d</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+  <div class="footer">
+    <div id="countInfo">—</div>
+    <div>Click a value to drill into file-wise details</div>
+  </div>
+</section>
 
-    <!-- Personal Section -->
-    <div class="tab-pane fade" id="personal" role="tabpanel">
-      <div class="tiles">
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-image" style="color:#17a2b8;"></i>My Gallery</h3><p>One place to view some of my photo collections</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-calendar-days" style="color:#007bff;"></i>My Schedules</h3><p>Upcoming Appointments and meetings</p></a>
-        <a href="https://ttdletters-mrc.netlify.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-envelope-open-text" style="color:#fd7e14;"></i>My TTD Letters</h3><p>A report which helps in planning the issue of TTD Letters</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-envelope" style="color:#cc3fb9;"></i>My CMPs</h3><p>A place to view all the letter addressed by me to departments</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-bell" style="color:#dc3545;"></i>My Reminders</h3><p>All my key tasks which need special attention</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-people-group" style="color:#199f12;"></i>My Core Team</h3><p>Details of my Team members who supports my professional & Personal Tasks</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-file" style="color:#43a7bd;"></i>My Documents</h3><p>A place where all my important documents organizer for faster retrival</p></a>
+  </div>
+</section>
+  <div class="modal" id="modal">
+    <div class="box">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 id="modalTitle">Details</h3>
+        <button class="btn" id="btnClose">✖ Close</button>
       </div>
+      <div class="rows" id="detailRows"></div>
     </div>
   </div>
 
-  <!-- Modal -->
-  <div class="modal-backdrop-custom" id="customModal">
-    <div class="modal-card">
-      <h4>🚧 Dashboard Under Development</h4>
-      <p>This dashboard is currently under development.<br>Please visit the site later.</p>
-      <button onclick="closeModal()">Okay</button>
-    </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Modal logic
-    const modal = document.getElementById('customModal');
-    const tiles = document.querySelectorAll('.tile');
+/* ===== Sorting state & mapping ===== */
+let currentSort = { column: null, asc: true };
 
-    tiles.forEach(tile => {
-      tile.addEventListener('click', function(e) {
-        if (this.getAttribute('href') === '#') {
-          e.preventDefault();
-          modal.style.display = 'flex';
+const HEADER_KEY_MAP = {
+  "Minister's Name": "employee",
+  "Avg Time": "avg",
+  "Median Time": "med",
+  "Opening": "opening",
+  "Received": "received",
+  "Processed": "processed",
+  "Closing": "closing", 
+  "Processed ≤1d": "proc1d",
+  "Processed ≤2d": "proc2d",
+  "Processed ≤3d": "proc3d",
+  "Processed ≤1w": "proc1w",
+  "Processed ≤1m": "proc1m",
+  "Processed >1m": "procGt1m",   
+  "Pending Files": "activeNow",
+  "Pending >7d": "p7",
+  "Pending >15d": "p15",
+  "Pending >30d": "p30",
+  "Pending >60d": "p60",
+  "Pending >90d": "p90",
+  "Pending >120d": "p120"
+};
+
+function canonicalHeader(text){
+  return String(text || '')
+    .replace(/[▲▼]/g, '')   // remove arrows if present
+    .replace(/\s+/g,' ')     // collapse whitespace
+    .trim();
+}
+
+function compareRows(a, b, key, asc = true) {
+  const va = a[key];
+  const vb = b[key];
+
+  // Both null/undefined
+  if (va == null && vb == null) return 0;
+  if (va == null) return asc ? -1 : 1;
+  if (vb == null) return asc ? 1 : -1;
+
+  // If both numbers (or numeric strings) compare numerically
+  const na = typeof va === 'number' || (!isNaN(Number(va)) && va !== '');
+  const nb = typeof vb === 'number' || (!isNaN(Number(vb)) && vb !== '');
+
+  if (na && nb) {
+    const naNum = Number(va);
+    const nbNum = Number(vb);
+    if (naNum === nbNum) return 0;
+    return asc ? naNum - nbNum : nbNum - naNum;
+  }
+
+  // Fallback to string comparison
+  const sa = String(va).toLowerCase();
+  const sb = String(vb).toLowerCase();
+  return asc ? sa.localeCompare(sb) : sb.localeCompare(sa);
+}
+
+/* ===== Utilities ===== */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const fmt = (n) => n?.toLocaleString?.('en-IN') ?? String(n ?? '');
+const hours = (ms) => ms/36e5;
+const toHH = (h) => (isNaN(h)?'-': `${h.toFixed(2)} h`);
+const parseTS = (s) => s ? new Date(String(s).replace(' ', 'T')) : null; // handles +05:30
+const by = (k) => (a,b)=> (a[k] > b[k]) ? 1 : (a[k] < b[k]) ? -1 : 0;
+
+/* ===== State ===== */
+let MOVES = [];
+let IDMAP = new Map();
+let EMP_POSTS = new Map();
+let INTERVALS = [];
+
+/* ===== Load JSONs (unchanged) ===== */
+async function loadJSONFiles() {
+  try {
+    const movementFiles = [
+      "data_movements_24.08.25_part1.json",
+      "data_movements_24.08.25_part2.json",
+      "data_movements_24.08.25_part3.json",
+      "data_movements_24.08.25_part4.json",
+      "data_movements_24.08.25_part5.json",
+      "data_movements_24.08.25_part6.json",
+      "data_movements_24.08.25_part7.json",
+      "data_movements_24.08.25_part8.json",
+      "data_movements_24.08.25_part9.json",
+      "data_movements_24.08.25_part10.json"
+    ];
+
+    const movesResArray = await Promise.all(
+      movementFiles.map(file => fetch(file))
+    );
+    const movesArrays = await Promise.all(movesResArray.map(res => {
+      if (!res.ok) throw new Error(`Failed to load ${res.url}`);
+      return res.json();
+    }));
+    MOVES = movesArrays.flat();
+
+    const idsRes = await fetch("data_ids.json");
+    if (!idsRes.ok) throw new Error("Failed to load data_ids.json");
+    const list = await idsRes.json();
+
+    IDMAP = new Map(list.map(o => [Number(o.post_id), o]));
+    EMP_POSTS = new Map(list.map(o => [Number(o.post_id), `${o.employee_name} • ${o.org_unit_name}`]));
+
+    populateEmployeeFilter(list);
+
+    const dropdownHeader = document.querySelector('.dropdown-header');
+    const dropdownBody = document.querySelector('.dropdown-body');
+    if (dropdownHeader && dropdownBody) {
+      dropdownHeader.addEventListener('click', () => dropdownBody.classList.toggle('hidden'));
+    }
+
+    maybeInit();
+    attachFilterListeners();
+  } catch (err) {
+    console.error(err);
+    alert("Failed to load JSON files: " + err.message);
+  }
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  showLoading();
+  setTimeout(() => {
+    loadJSONFiles();
+  }, 50);
+});
+
+function attachFilterListeners() {
+  ["startDate","endDate","employeeSelect","subjectInput","compInput"].forEach(id=>{
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener("change", applyFilters);
+    el.addEventListener("input", applyFilters);
+  });
+}
+
+/* ===== computeIntervals (unchanged) ===== */
+function computeIntervals(){
+  INTERVALS = [];
+  const byFile = new Map();
+  for(const m of MOVES){
+    const k = m['Computer No'];
+    if(!byFile.has(k)) byFile.set(k, []);
+    byFile.get(k).push(m);
+  }
+  for(const [fileNo, arr] of byFile){
+    arr.sort((a,b)=> parseTS(a.sent_on) - parseTS(b.sent_on));
+    for(let i=0;i<arr.length;i++){
+      const rec = arr[i];
+      const holder = Number(rec.receiver_post_id);
+      const start = parseTS(rec.read_on);
+      if(!start || !holder) continue;
+      let end = null; let sendRec = null;
+      for(let j=i;j<arr.length;j++){
+        if(Number(arr[j].sender_post_id) === holder){ end = parseTS(arr[j].sent_on); sendRec = arr[j]; break; }
+      }
+      const subject = rec.subject_description || (sendRec && sendRec.subject_description) || '';
+      INTERVALS.push({
+        fileNo,
+        subject,
+        holderPostId: holder,
+        holder: IDMAP.get(holder)?.employee_name || `Unknown (ID:${holder})`,
+        postName: IDMAP.get(holder)?.post_name || '',
+        orgUnit: IDMAP.get(holder)?.org_unit_name || '',
+        start,
+        end,
+      });
+    }
+  }
+  INTERVALS = INTERVALS.filter((v,i,a)=> i===a.findIndex(t=> t.fileNo===v.fileNo && t.holderPostId===v.holderPostId && t.start?.getTime()===v.start?.getTime() && (t.end?.getTime()||0)===(v.end?.getTime()||0)) );
+}
+
+/* ===== Filters and helpers (unchanged) ===== */
+function setDefaultDates(){
+  const times = MOVES.map(m=>parseTS(m.sent_on)?.getTime()).filter(Boolean).sort((a,b)=>a-b);
+  if(!times.length) return;
+  const min = new Date(times[0]);
+  const max = new Date(times[times.length-1]);
+  $('#startDate').value = toYMD(min);
+  $('#endDate').value = toYMD(max);
+}
+const toYMD = d=> d? new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10): '';
+
+function populateEmployeeFilter(list) {
+  const container = document.getElementById('employeeSelect');
+  if(!container) return;
+  container.innerHTML = '';
+
+  const uniqEmp = [...new Set(list.map(o => o.employee_name))]
+                    .filter(n => n && n.trim() !== "")
+                    .sort((a,b)=>a.localeCompare(b));
+
+  uniqEmp.forEach(emp => {
+    const label = document.createElement('label');
+    label.innerHTML = `
+      <input type="checkbox" value="${emp}" checked />
+      <span>${emp}</span>
+    `;
+    container.appendChild(label);
+  });
+
+  container.querySelectorAll('input[type=checkbox]').forEach(cb => {
+    cb.addEventListener('change', applyFilters);
+  });
+}
+
+document.getElementById('selectAllEmp')?.addEventListener('click', () => {
+  document.querySelectorAll('#employeeSelect input[type=checkbox]').forEach(cb => cb.checked = true);
+  applyFilters();
+});
+
+document.getElementById('deselectAllEmp')?.addEventListener('click', () => {
+  document.querySelectorAll('#employeeSelect input[type=checkbox]').forEach(cb => cb.checked = false);
+  applyFilters();
+});
+
+document.getElementById('searchEmp')?.addEventListener('input', e => {
+  const search = e.target.value.toLowerCase();
+  document.querySelectorAll('#employeeSelect label').forEach(label => {
+    const name = label.textContent.toLowerCase();
+    label.style.display = name.includes(search) ? 'flex' : 'none';
+  });
+});
+
+function getSelectedEmployees() {
+  return [...document.querySelectorAll('#employeeSelect input[type=checkbox]:checked')]
+           .map(cb => cb.value);
+}
+
+function applyFilters(){
+  const sDate = $('#startDate')?.value ? new Date($('#startDate').value+'T00:00:00') : null;
+  const eDate = $('#endDate')?.value ? new Date($('#endDate').value+'T23:59:59') : null;
+  const empSelected = getSelectedEmployees();
+  const subj = $('#subjectInput')?.value.trim().toLowerCase() || '';
+  const comp = $('#compInput')?.value.trim() || '';
+
+  const filtered = INTERVALS.filter(v=>{
+    if(empSelected.length && !empSelected.includes(v.holder)) return false;
+    if(subj && !String(v.subject||'').toLowerCase().includes(subj)) return false;
+    if(comp && String(v.fileNo) !== comp) return false;
+    return true;
+  });
+
+  const rows = aggregateByEmployee(filtered, sDate, eDate);
+  render(rows, sDate, eDate);
+  computePendingAges(filtered);
+}
+
+/* ===== aggregation (unchanged) ===== */
+function fmtDuration(ms) {
+  if (!isFinite(ms)) return '';
+  let totalMins = Math.floor(ms / (1000 * 60));
+  const days = Math.floor(totalMins / (60 * 24));
+  totalMins %= 60 * 24;
+  const hrs = Math.floor(totalMins / 60);
+  const mins = totalMins % 60;
+
+  let parts = [];
+  if (days) parts.push(`${days}D`);
+  if (hrs) parts.push(`${hrs}H`);
+  if (mins) parts.push(`${mins}M`);
+  return parts.length ? parts.join(' ') : '0M';
+}
+
+function aggregateByEmployee(list, sDate, eDate){
+  const map = new Map();
+  for(const it of list){
+    const key = `${it.holder}`;
+    if(!map.has(key)) map.set(key, {employee: it.holder, intervals: []});
+    map.get(key).intervals.push(it);
+  }
+
+  const rows = [];
+  const now = new Date();
+
+  for(const [k,obj] of map){
+    const ints = obj.intervals;
+    let opening=0, received=0, processed=0, closing=0;
+    let activeNow=0;
+    let p7=0,p15=0,p30=0,p60=0,p90=0,p120=0;
+    const procDurations=[];
+    for(const iv of ints){
+      const st=iv.start, en=iv.end;
+
+      const startedBefore = sDate ? (st && st < sDate) : false;
+      const endsBefore    = sDate ? (en && en < sDate) : false;
+      const overlapsStart = sDate ? (st && !endsBefore && (startedBefore || st <= sDate)) : false;
+      if(sDate && overlapsStart) opening++;
+
+      if(sDate && eDate){
+        if(st && st >= sDate && st <= eDate) received++;
+        if(en && en >= sDate && en <= eDate){
+          processed++;
+          const durMs = en - st;
+          if(isFinite(durMs)) procDurations.push(durMs);
         }
+      }
+
+      if(!en) activeNow++;
+
+      if(!en && st){
+        const days = (now - st)/(1000*60*60*24);
+        if (days > 7 && days <= 15) p7++;
+        else if (days > 15 && days <= 30) p15++;
+        else if (days > 30 && days <= 60) p30++;
+        else if (days > 60 && days <= 90) p60++;
+        else if (days > 90 && days <= 120) p90++;
+        else if (days > 120) p120++;
+      }
+    }
+
+    const proc1d   = procDurations.filter(d=>d <= 1*24*60*60*1000).length;
+    const proc2d   = procDurations.filter(d=>d > 1*24*60*60*1000 && d <= 2*24*60*60*1000).length;
+    const proc3d   = procDurations.filter(d=>d > 2*24*60*60*1000 && d <= 3*24*60*60*1000).length;
+    const proc1w   = procDurations.filter(d=>d > 3*24*60*60*1000 && d <= 7*24*60*60*1000).length;
+    const proc1m   = procDurations.filter(d=>d > 7*24*60*60*1000 && d <= 30*24*60*60*1000).length;
+    const procGt1m = procDurations.filter(d=>d > 30*24*60*60*1000).length;
+
+    const avgMs = procDurations.length ? procDurations.reduce((a,b)=>a+b,0)/procDurations.length : NaN;
+    const medMs = procDurations.length ? median(procDurations) : NaN;
+
+    closing = opening + received - processed;
+
+    rows.push({
+      employee: obj.employee,
+      avg: avgMs, med: medMs,
+      opening, received, processed, closing,
+      activeNow,
+      p7,p15,p30,p60,p90,p120,
+      proc1d,proc2d,proc3d,proc1w,proc1m,procGt1m,
+      intervals: ints
+    });
+  }
+
+  rows.sort((a,b)=> b.avg - a.avg || a.employee.localeCompare(b.employee));
+  return rows;
+}
+
+const median = (arr)=>{
+  const a = [...arr].sort((x,y)=>x-y); 
+  const n = a.length; 
+  if(!n) return NaN; 
+  const m = Math.floor(n/2); 
+  return n%2? a[m] : (a[m-1]+a[m])/2;
+};
+
+/* ===== Render with sorting ===== */
+function render(rows, sDate, eDate){
+  const tbody = $('#tbody');
+  if(!tbody) return;
+  tbody.innerHTML = '';
+  let totOpen=0, totRecv=0, totProc=0, totClose=0; 
+  let totProc1d=0, totProc2d=0, totProc3d=0, totProc1w=0, totProc1m=0, totProcGt1m=0;
+  const allDur=[];
+
+  // Apply column sort if requested
+  if (currentSort.column) {
+    const colLabel = canonicalHeader(currentSort.column);
+    const key = HEADER_KEY_MAP[colLabel];
+    if (key) {
+      rows.sort((a,b) => compareRows(a,b,key,currentSort.asc));
+    }
+  }
+
+  for(const r of rows){
+    totOpen+=r.opening; 
+    totRecv+=r.received; 
+    totProc+=r.processed; 
+    totClose+=r.closing; 
+
+    totProc1d   += r.proc1d;
+    totProc2d   += r.proc2d;
+    totProc3d   += r.proc3d;
+    totProc1w   += r.proc1w;
+    totProc1m   += r.proc1m;
+    totProcGt1m += r.procGt1m;
+
+    if(isFinite(r.avg)) {
+      allDur.push(...r.intervals
+        .filter(iv=>iv.end && (!sDate || iv.end>=sDate) && (!eDate || iv.end<=eDate))
+        .map(iv=>iv.end - iv.start));
+    }
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td data-label="Minister's Name"><span>${escapeHTML(r.employee)}</span></td>
+      <td data-label="Avg Time" class="number">${isFinite(r.avg) ? fmtDuration(r.avg) : ''}</td>
+      <td data-label="Median Time" class="number">${isFinite(r.med) ? fmtDuration(r.med) : ''}</td>
+      <td data-label="Opening" class="number"><span class="link">${fmt(r.opening)}</span></td>
+      <td data-label="Received" class="number"><span class="link">${fmt(r.received)}</span></td>
+      <td data-label="Processed" class="number"><span class="link">${fmt(r.processed)}</span></td>
+      <td data-label="Closing" class="number"><span class="link">${fmt(r.closing)}</span></td>  
+      <td data-label="Processed ≤1d" class="number"><span class="link">${fmt(r.proc1d)}</span></td>
+      <td data-label="Processed ≤2d" class="number"><span class="link">${fmt(r.proc2d)}</span></td>
+      <td data-label="Processed ≤3d" class="number"><span class="link">${fmt(r.proc3d)}</span></td>
+      <td data-label="Processed ≤1w" class="number"><span class="link">${fmt(r.proc1w)}</span></td>
+      <td data-label="Processed ≤1m" class="number"><span class="link">${fmt(r.proc1m)}</span></td>
+      <td data-label="Processed >1m" class="number"><span class="link">${fmt(r.procGt1m)}</span></td>          
+      <td data-label="Pending Files" class="number"><span class="link">${fmt(r.activeNow)}</span></td>
+      <td data-label="Pending >7d" class="number"><span class="link">${fmt(r.p7)}</span></td>
+      <td data-label="Pending >15d" class="number"><span class="link">${fmt(r.p15)}</span></td>
+      <td data-label="Pending >30d" class="number"><span class="link">${fmt(r.p30)}</span></td>
+      <td data-label="Pending >60d" class="number"><span class="link">${fmt(r.p60)}</span></td>
+      <td data-label="Pending >90d" class="number"><span class="link">${fmt(r.p90)}</span></td>
+      <td data-label="Pending >120d" class="number"><span class="link">${fmt(r.p120)}</span></td>
+    `;
+    tbody.appendChild(tr);
+
+    // attach drill click
+    tr.querySelectorAll('.link').forEach(span => {
+      span.addEventListener('click', ev => {
+        ev.stopPropagation();
+        const col = span.parentElement.dataset.label;
+        const sDate = $('#startDate')?.value ? new Date($('#startDate').value+'T00:00:00') : null;
+        const eDate = $('#endDate')?.value ? new Date($('#endDate').value+'T23:59:59') : null;
+        const empSelected = getSelectedEmployees();
+        const subj = $('#subjectInput')?.value.trim().toLowerCase() || '';
+        const comp = $('#compInput')?.value.trim() || '';
+        openDrill(r.employee, col, { sDate, eDate, empSelected, subj, comp });
       });
     });
+  } // end rows loop
 
-    document.querySelectorAll('.tile').forEach(tile => {
-      const banner = document.createElement('div');
-      if (tile.getAttribute('href') === '#') {
-        banner.className = "banner dev";
-        banner.textContent = "UNDER DEVELOPMENT";
-      } else {
-        banner.className = "banner live";
-        banner.textContent = "LIVE";
-      }
-      tile.appendChild(banner);
+  // update header arrows once (after rows creation)
+  document.querySelectorAll("thead th").forEach(th => {
+    const base = canonicalHeader(th.textContent);
+    th.textContent = base + ((currentSort.column && base === canonicalHeader(currentSort.column)) ? (currentSort.asc ? " ▲" : " ▼") : "");
+  });
+
+  $('#countInfo').textContent = `${rows.length} employees`;
+
+  // Header KPIs
+  $('#k_open').textContent = fmt(totOpen);
+  $('#k_recv').textContent = fmt(totRecv);
+  $('#k_proc').textContent = fmt(totProc);
+  $('#k_close').textContent = fmt(totClose);
+
+  const allAvg = allDur.length ? allDur.reduce((a,b)=>a+b,0)/allDur.length : NaN;
+  const allMed = allDur.length ? median(allDur) : NaN;
+  $('#k_avg').textContent = isFinite(allAvg) ? fmtDuration(allAvg) : '';
+  $('#k_med').textContent = isFinite(allMed) ? fmtDuration(allMed) : '';
+
+  $('#k_open_hint').textContent = dateHint('as of', sDate);
+  $('#k_close_hint').textContent = dateHint('as of', eDate);
+  $('#k_recv_hint').textContent = dateHint('between', sDate, eDate);
+  $('#k_proc_hint').textContent = dateHint('between', sDate, eDate);
+
+  // Processed-time bucket KPIs
+  $('#k_proc1d').textContent = fmt(totProc1d);
+  $('#k_proc2d').textContent = fmt(totProc2d);
+  $('#k_proc3d').textContent = fmt(totProc3d);
+  $('#k_proc1w').textContent = fmt(totProc1w);
+  $('#k_proc1m').textContent = fmt(totProc1m);
+  $('#k_procGt1m').textContent = fmt(totProcGt1m);
+
+  computePendingAges();
+}
+
+/* ===== dateHint, drilldown etc. (unchanged except small safety) ===== */
+function dateHint(prefix, a, b){
+  const f = d=> d? d.toLocaleDateString('en-GB') : '-';
+  return b? `${prefix} ${f(a)}–${f(b)}`: `${prefix} ${f(a)}`;
+}
+
+function openDrill(employee, metric, filters){
+  $('#modalTitle').textContent = `${employee} — ${metric}`;
+  const box = $('#detailRows'); 
+  box.innerHTML = '';
+  const maxDate = filters.eDate || new Date(); 
+
+  const filteredIntervals = INTERVALS.filter(iv=>{
+    if(iv.holder !== employee) return false;
+    if(filters.subj && !String(iv.subject||'').toLowerCase().includes(filters.subj)) return false;
+    if(filters.comp && String(iv.fileNo) !== filters.comp) return false;
+
+    switch(metric){
+      case 'Opening': 
+        return filters.sDate && iv.start && iv.start < filters.sDate;
+      case 'Received': 
+        return filters.sDate && filters.eDate && iv.start && iv.start >= filters.sDate && iv.start <= filters.eDate;
+      case 'Processed': 
+        return filters.sDate && filters.eDate && iv.end && iv.end >= filters.sDate && iv.end <= filters.eDate;
+      case 'Pending Files': 
+        return !iv.end;
+      case 'Processed ≤1d': 
+        return iv.end && (iv.end - iv.start) <= 1*24*60*60*1000;
+      case 'Processed ≤2d': 
+        return iv.end && (iv.end - iv.start) > 1*24*60*60*1000 && (iv.end - iv.start) <= 2*24*60*60*1000;
+      case 'Processed ≤3d': 
+        return iv.end && (iv.end - iv.start) > 2*24*60*60*1000 && (iv.end - iv.start) <= 3*24*60*60*1000;
+      case 'Processed ≤1w': 
+        return iv.end && (iv.end - iv.start) > 3*24*60*60*1000 && (iv.end - iv.start) <= 7*24*60*60*1000;
+      case 'Processed ≤1m': 
+        return iv.end && (iv.end - iv.start) > 7*24*60*60*1000 && (iv.end - iv.start) <= 30*24*60*60*1000;
+      case 'Processed >1m': 
+        return iv.end && (iv.end - iv.start) > 30*24*60*60*1000;
+      case 'Pending >7d': case 'Pending >15d': case 'Pending >30d': case 'Pending >60d': case 'Pending >90d': case 'Pending >120d':
+        if(!iv.end && iv.start){
+          const daysHeld = (maxDate - iv.start)/(1000*60*60*24);
+          if(metric === 'Pending >7d') return daysHeld > 7 && daysHeld <= 15;
+          if(metric === 'Pending >15d') return daysHeld > 15 && daysHeld <= 30;
+          if(metric === 'Pending >30d') return daysHeld > 30 && daysHeld <= 60;
+          if(metric === 'Pending >60d') return daysHeld > 60 && daysHeld <= 90;
+          if(metric === 'Pending >90d') return daysHeld > 90 && daysHeld <= 120;
+          if(metric === 'Pending >120d') return daysHeld > 120;
+        }
+        return false;
+      default: 
+        return false;
+    }
+  });
+
+  filteredIntervals.sort((a,b)=>{
+    const durA = a.end ? a.end - a.start : maxDate - a.start;
+    const durB = b.end ? b.end - b.start : maxDate - b.start;
+    return durB - durA;
+  });
+
+  for(const iv of filteredIntervals){
+    const dur = iv.end ? iv.end - iv.start : maxDate - iv.start;
+    const el = document.createElement('div');
+    el.className = 'row';
+    el.innerHTML = `
+      <div class='label'>Computer No</div><div>#${iv.fileNo}</div>
+      <div class='label'>Subject</div><div>${escapeHTML(iv.subject||'')}</div>
+      <div class='label'>Held From</div><div>${iv.start ? iv.start.toLocaleString() : '-'}</div>
+      <div class='label'>Sent On</div><div>${iv.end ? iv.end.toLocaleString() : '<span class="tag">Pending</span>'}</div>
+      <div class='label'>${iv.end ? 'Time Taken' : 'Held For'}</div><div>${fmtDuration(dur)}</div>
+    `;
+    box.appendChild(el);
+  }
+
+  $('#modal').classList.add('open');
+}
+
+$('#btnClose')?.addEventListener('click', ()=> $('#modal').classList.remove('open'));
+
+/* ===== Safe CSV export (only hook up if button exists) ===== */
+const btnExport = $('#btnExport');
+if (btnExport) {
+  btnExport.addEventListener('click', ()=>{
+    const sDate = $('#startDate')?.value ? new Date($('#startDate').value+'T00:00:00') : null;
+    const eDate = $('#endDate')?.value ? new Date($('#endDate').value+'T23:59:59') : null;
+    const selectedEmps = getSelectedEmployees();
+    const emp = selectedEmps.length===1 ? selectedEmps[0] : '';
+    const subj = $('#subjectInput')?.value.trim().toLowerCase() || '';
+    const comp = $('#compInput')?.value.trim() || '';
+    const org = $('#orgInput')?.value.trim().toLowerCase() || '';
+
+    const filtered = INTERVALS.filter(v=>{
+      if(emp && v.holder !== emp) return false;
+      if(subj && !String(v.subject||'').toLowerCase().includes(subj)) return false;
+      if(comp && String(v.fileNo) !== comp) return false;
+      if(org && !String(v.orgUnit||'').toLowerCase().includes(org)) return false;
+      return true;
     });
 
-    function closeModal() {
-      modal.style.display = 'none';
+    const rows = aggregateByEmployee(filtered, sDate, eDate);
+
+    const csvHeader = ['Employee,Opening,Received,Processed,Closing,Avg Hours,Median Hours,Active Files'];
+    const csvRows = rows.map(r=> [
+      q(r.employee),
+      r.opening, r.received, r.processed, r.closing,
+      round(r.avg), round(r.med), r.activeNow
+    ].join(','));
+    const csv = csvHeader.concat(csvRows).join('\n');
+
+    const blob = new Blob([csv], {type:'text/csv'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href=url; a.download='file_clearance_kpis.csv'; a.click(); URL.revokeObjectURL(url);
+  });
+}
+const q = s=> '"'+String(s??'').replace(/"/g,'""')+'"';
+const round = v=> isFinite(v)? v.toFixed(2): '';
+
+function escapeHTML(s){
+  return String(s).replace(/[&<>"']/g, m=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]));
+}
+
+function computePendingAges() {
+  const now = new Date();
+  const maxSent = MOVES.map(m => parseTS(m.sent_on)).filter(Boolean);
+  const maxDate = maxSent.length ? new Date(Math.max(...maxSent)) : now;
+  const headerEl = document.getElementById('pendingHeader');
+  if (headerEl) headerEl.textContent = `Status of files pending with Ministers as on ${maxDate.toLocaleDateString('en-GB')}`;
+
+  let p7 = 0, p15 = 0, p30 = 0, p60 = 0, p90 = 0, p120 = 0;
+
+  const selectedEmps = [...document.querySelectorAll('#employeeSelect input[type=checkbox]:checked')]
+                        .map(cb => cb.value.trim())
+                        .filter(Boolean);
+
+  for (const iv of INTERVALS) {
+    if (selectedEmps.length && !selectedEmps.includes(iv.holder)) continue;
+    if (!iv.end && iv.start) {
+      const days = (now - iv.start) / (1000 * 60 * 60 * 24);
+      if (days > 7 && days <= 15) p7++;
+      else if (days > 15 && days <= 30) p15++;
+      else if (days > 30 && days <= 60) p30++;
+      else if (days > 60 && days <= 90) p60++;
+      else if (days > 90 && days <= 120) p90++;
+      else if (days > 120) p120++;
     }
-  </script>
+  }
+
+  $('#k_p7').textContent = fmt(p7);
+  $('#k_p15').textContent = fmt(p15);
+  $('#k_p30').textContent = fmt(p30);
+  $('#k_p60').textContent = fmt(p60);
+  $('#k_p90').textContent = fmt(p90);
+  $('#k_p120').textContent = fmt(p120);
+}
+
+/* ===== Loading controls & init ===== */
+function showLoading() {
+  document.getElementById("loadingModal").style.display = "flex";
+}
+function hideLoading() {
+  document.getElementById("loadingModal").style.display = "none";
+}
+
+function maybeInit(){
+  if(!MOVES.length || !IDMAP.size) return;
+  computeIntervals();
+  setDefaultDates();
+  applyFilters();
+  hideLoading();
+}
+
+/* ===== Attach header click listeners (safe) ===== */
+function initHeaderSorting() {
+  document.querySelectorAll("thead th").forEach(th => {
+    th.style.cursor = "pointer";
+    th.addEventListener("click", () => {
+      const col = canonicalHeader(th.textContent);
+      if (currentSort.column === col) {
+        currentSort.asc = !currentSort.asc;
+      } else {
+        currentSort.column = col;
+        currentSort.asc = true;
+      }
+      applyFilters();
+    });
+  });
+}
+// call it now (script at end of body) — safe even if headers are present
+initHeaderSorting();
+
+// ===== Table search filter =====
+const tableSearch = document.getElementById("tableSearch");
+if (tableSearch) {
+  tableSearch.addEventListener("input", () => {
+    const search = tableSearch.value.toLowerCase();
+    document.querySelectorAll("#tbody tr").forEach(tr => {
+      const empCell = tr.querySelector("td[data-label=\"Minister's Name\"]");
+      if (!empCell) return;
+      const emp = empCell.textContent.toLowerCase();
+      tr.style.display = emp.includes(search) ? "" : "none";
+    });
+  });
+}
+
+
+</script>
+
 </body>
 </html>
