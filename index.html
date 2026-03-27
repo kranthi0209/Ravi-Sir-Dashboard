@@ -31,8 +31,9 @@
       font-style: italic;
     }
     .tiles {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 20px;
       padding: 20px 40px 40px;
     }
@@ -45,9 +46,12 @@
       cursor: pointer;
       text-decoration: none;
       color: inherit;
-      display: block;
+      display: flex;
+      flex-direction: column;
       position: relative;
       overflow: hidden;
+      flex: 0 0 300px;
+      width: 300px;
     }
     .tile:hover {
       transform: translateY(-8px);
@@ -118,6 +122,41 @@
       to {opacity: 1; transform: scale(1);}
     }
 
+    /* NotebookLM tile identifier */
+    .tile-notebook {
+      border-left: 4px solid #f5c842;
+      background: linear-gradient(135deg, #fffde7, #fff8c5);
+    }
+    .notebook-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: auto;
+      padding-top: 14px;
+      pointer-events: none;
+    }
+    .notebook-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: linear-gradient(135deg, #1a73e8 0%, #7b2ff7 100%);
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 5px 13px 5px 9px;
+      border-radius: 20px;
+      box-shadow: 0 3px 10px rgba(123,47,247,0.35);
+    }
+    .notebook-badge-pill i {
+      font-size: 1rem;
+      background: linear-gradient(135deg, #ffd700, #ff6b35);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
     /* Banners */
     .banner {
       position: absolute;
@@ -181,85 +220,121 @@
   box-shadow: 0 6px 16px rgba(0,0,0,0.3);
 }
 
+    /* Icon colors */
+    .ic-blue    { color: #007bff; }
+    .ic-green   { color: #28a745; }
+    .ic-yellow  { color: #ffc107; }
+    .ic-red     { color: #dc3545; }
+    .ic-dkgreen { color: #055802; }
+    .ic-orange  { color: #e67f19; }
+    .ic-purple  { color: #6f42c1; }
+    .ic-teal    { color: #20c997; }
+    .ic-fd      { color: #fd7e14; }
+    .ic-pink    { color: #e83e8c; }
+    .ic-cyan    { color: #17a2b8; }
+    .ic-indigo  { color: #199f12; }
+    .ic-sky     { color: #43a7bd; }
+    .ic-violet  { color: #cc3fb9; }
   </style>
 </head>
 <body>
   <header>
-    <h1>Muddada Ravichandra (I.A.S)</h1>
+    <h1>Muddada Ravi Chandra (I.A.S)</h1>
     <p>A place where all my professional stuff is organised</p>
   </header>
 
   <!-- Tabs -->
   <ul class="nav nav-tabs justify-content-center mt-3" id="dashboardTabs" role="tablist">
     <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="developed-tab" data-bs-toggle="tab" data-bs-target="#developed" type="button" role="tab">Dashboards Developed in My Peshi</button>
+      <button class="nav-link active" id="cmo-tab" data-bs-toggle="tab" data-bs-target="#cmo" type="button" role="tab">Dashboards Developed in CMO</button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link" id="collected-tab" data-bs-toggle="tab" data-bs-target="#collected" type="button" role="tab">Dashboards Collected from Departments</button>
+      <button class="nav-link" id="ttd-tab" data-bs-toggle="tab" data-bs-target="#ttd" type="button" role="tab">TTD Related Dashboards</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="collected-tab" data-bs-toggle="tab" data-bs-target="#collected" type="button" role="tab">Dashboards Collected From Departments</button>
     </li>
     <li class="nav-item" role="presentation">
       <button class="nav-link" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button" role="tab">My Personal Stuff</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="underdev-tab" data-bs-toggle="tab" data-bs-target="#underdev" type="button" role="tab">Dashboards under Development</button>
     </li>
   </ul>
 
   <!-- Tab Content -->
   <div class="tab-content p-4" id="dashboardTabsContent">
-    
-    <!-- Developed Section -->
-    <div class="tab-pane fade show active" id="developed" role="tabpanel">
+
+    <!-- CMO Developed Section -->
+    <div class="tab-pane fade show active" id="cmo" role="tabpanel">
       <div class="tiles">
-        <a href="https://ais-officers-service-records.web.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-id-card" style="color:#007bff;"></i>AIS Officers Service Details</h3><p>Detailed service records of AIS officers.</p></a>
-        <a href="https://non-scs.web.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-user-tie" style="color:#28a745;"></i>Non SCS Applicants</h3><p>Information on Non-SCS applicants.</p></a>
-        <a href="https://job-calendar-ap.web.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-users" style="color:#ffc107;"></i>AP Employee Cadre Strength</h3><p>Cadre strength details of AP employees.</p></a>
-        <a href="https://law-officers-tenure-ap.web.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-scale-balanced" style="color:#dc3545;"></i>Law Officers Tenure Monitoring</h3><p>Monitoring of tenure of Law Officers.</p></a>
-        <a href="https://eoffice-cmoap.netlify.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-desktop" style="color:#055802;"></i>e-Office KPIs Dashboard</h3><p>A Dashboard which illustrates the file clearing KPIs of all the Ministers/ & Officers across all the Departments</p></a>
-        <a href="https://kranthi0209.github.io/ttd-hr-analytics/" target="_blank" class="tile"><h3><i class="fa-solid fa-gopuram" style="color:#e67f19;"></i>TTD HR Analytics</h3><p>Details of all the Employees of TTD</p></a>
-        <a href="https://kranthi0209.github.io/ap-district-key-posts/" target="_blank" class="tile"><h3><i class="fa-solid fa-user-pen" style="color:#dc3545;"></i>District Key Posts</h3><p>Application to Collect the Details of all the District Key posts and its incumbents</p></a>
-        <a href="https://nominations-apcmo.netlify.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-user-tie" style="color:#dc3545;"></i>Nomination Posts Monitoring System</h3><p>A portal to monitor the timely filling up of Nomination Posts and to monitor their tenure </p></a>
-        <a href="https://amsadmintml.ttdsevaonline.com/#/login" target="_blank" class="tile"><h3><i class="fa-solid fa-users" style="color:#ffc107;"></i>TTD Accomodation Monitoring System</h3><p>A place to verify all the details of Accomodation availabiltiy in TTD related Cottages and revenues generated by them</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-clipboard-list" style="color:#6f42c1;"></i>Manifesto Monitoring Module</h3><p>Tracking implementation of manifesto promises.</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-file-signature" style="color:#20c997;"></i>Election Affidavites Analysis</h3><p>Analysis of election affidavits.</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-coins" style="color:#fd7e14;"></i>Budget Analysis</h3><p>State budget analysis and insights.</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-chart-line" style="color:#17a2b8;"></i>States Own Revenue Analysis</h3><p>Revenue analysis of the state.</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-money-check-dollar" style="color:#e83e8c;"></i>Employees Payments Monitoring Module</h3><p>Monitoring employee payments across departments.</p></a>
-        
-         </div>
+        <a href="https://ais-officers-service-records.web.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-id-card ic-blue"></i>AIS Officers Service Details</h3><p>Detailed service records of AIS officers.</p></a>
+        <a href="https://non-scs.web.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-user-tie ic-green"></i>Non SCS Applicants</h3><p>Information on Non-SCS applicants.</p></a>
+        <a href="https://job-calendar-ap.web.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-users ic-yellow"></i>AP Employee Cadre Strength</h3><p>Cadre strength details of AP employees.</p></a>
+        <a href="https://law-officers-tenure-ap.web.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-scale-balanced ic-red"></i>Law Officers Tenure Monitoring</h3><p>Monitoring of tenure of Law Officers.</p></a>
+        <a href="https://eoffice-cmoap.netlify.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-desktop ic-dkgreen"></i>e-Office KPIs Dashboard</h3><p>A Dashboard which illustrates the file clearing KPIs of all the Ministers/ & Officers across all the Departments</p></a>
+        <a href="https://kranthi0209.github.io/ap-district-key-posts/" target="_blank" class="tile"><h3><i class="fa-solid fa-user-pen ic-red"></i>District Key Posts</h3><p>Application to Collect the Details of all the District Key posts and its incumbents</p></a>
+        <a href="https://nominations-apcmo.netlify.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-user-tie ic-red"></i>Nomination Posts Monitoring System</h3><p>A portal to monitor the timely filling up of Nomination Posts and to monitor their tenure</p></a>
+      </div>
+    </div>
+
+    <!-- TTD Section -->
+    <div class="tab-pane fade" id="ttd" role="tabpanel">
+      <div class="tiles">
+        <a href="https://kranthi0209.github.io/ttd-hr-analytics/" target="_blank" class="tile"><h3><i class="fa-solid fa-gopuram ic-orange"></i>TTD HR Analytics</h3><p>Details of all the Employees of TTD</p></a>
+        <a href="https://amsadmintml.ttdsevaonline.com/#/login" target="_blank" class="tile"><h3><i class="fa-solid fa-users ic-yellow"></i>TTD Accommodation Monitoring System</h3><p>A place to verify all the details of Accommodation availability in TTD related Cottages and revenues generated by them</p></a>
+        <a href="https://ttdletters-mrc.netlify.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-envelope-open-text ic-fd"></i>My TTD Letters</h3><p>A report which helps in planning the issue of TTD Letters</p></a>
+        <a href="https://notebooklm.google.com/notebook/690ebfb8-0ba3-4316-8393-86da643909eb" target="_blank" class="tile tile-notebook"><h3><i class="fa-solid fa-book-open ic-blue"></i>TTD - Mirasi Issue</h3><p>Covers the legal transition from hereditary mirasi systems to secular administrative management and the modernization of pilgrim services at the TTD</p><span class="notebook-badge"><span class="notebook-badge-pill"><i class="fa-solid fa-book-open"></i>NotebookLM</span></span></a>
+        <a href="https://notebooklm.google.com/notebook/c7804117-38ce-4e69-85c8-0260a6f1b75b" target="_blank" class="tile tile-notebook"><h3><i class="fa-solid fa-book-open ic-teal"></i>TTD Board Resolutions</h3><p>A gist of all the Board Resolutions and their supporting Documents</p><span class="notebook-badge"><span class="notebook-badge-pill"><i class="fa-solid fa-book-open"></i>NotebookLM</span></span></a>
+        <a href="https://notebooklm.google.com/notebook/ba23a015-1d57-43bd-80d8-848d424e9211" target="_blank" class="tile tile-notebook"><h3><i class="fa-solid fa-book-open ic-purple"></i>TTD Ghee Adultration Case</h3><p>Contains all documents related to the investigation and review of the alleged ghee adulteration case</p><span class="notebook-badge"><span class="notebook-badge-pill"><i class="fa-solid fa-book-open"></i>NotebookLM</span></span></a>
+      </div>
     </div>
 
     <!-- Collected Section -->
     <div class="tab-pane fade" id="collected" role="tabpanel">
       <div class="tiles">
-        <a href="https://dashboard.abdm.gov.in/abdm/" target="_blank" class="tile"><h3><i class="fa-solid fa-heartbeat" style="color:#dc3545;"></i>Ayushman Bharath Dashboard</h3><p>Healthcare coverage and schemes dashboard.</p></a>
-        <a href="https://dashboard.drntrvaidyaseva.ap.gov.in/" target="_blank" class="tile"><h3><i class="fa-solid fa-hospital" style="color:#17a2b8;"></i>NTR Vaidya Seva Dashboard</h3><p>Health services for citizens.</p></a>
-        <a href="https://apchfw.ap.gov.in/apchfw-dashboard/" target="_blank" class="tile"><h3><i class="fa-solid fa-stethoscope" style="color:#28a745;"></i>Health & Family Welfare Dashboard</h3><p>Comprehensive family health statistics.</p></a>
-        <a href="https://eaushadhiap.dcservices.in/" target="_blank" class="tile"><h3><i class="fa-solid fa-pills" style="color:#6f42c1;"></i>e-Aushadhi Inventory Dashboard</h3><p>Drug inventory management system.</p></a>
-        <a href="https://pfms.nic.in/SitePages/Users/LoginDetails/Login.aspx" target="_blank" class="tile"><h3><i class="fa-solid fa-wallet" style="color:#20c997;"></i>Public Financial Management System</h3><p>Tracking of state finances.</p></a>
-        <a href="https://cfms.ap.gov.in/" target="_blank" class="tile"><h3><i class="fa-solid fa-sack-dollar" style="color:#fd7e14;"></i>Comprehensive Financial Management System</h3><p>End-to-end financial monitoring.</p></a>
-        <a href="https://nidhi.apcfss.in/login" target="_blank" class="tile"><h3><i class="fa-solid fa-gem" style="color:#e83e8c;"></i>Nidhi Portal</h3><p>A Dashboard on HR data of Andhra Pradesh</p></a>
-        <a href="https://epos.ap.gov.in/PowerBI/Dashboard.jsp" target="_blank" class="tile"><h3><i class="fa-solid fa-truck" style="color:#007bff;"></i>Civil Supplies Corporation</h3><p>Monitoring of civil supplies distribution.</p></a>
-        <a href="https://aptis.apct.gov.in/apdashboard/" target="_blank" class="tile"><h3><i class="fa-solid fa-receipt" style="color:#28a745;"></i>Commercial Tax Dashboard</h3><p>Tracking state tax collections and analysis.</p></a>
-        <a href="https://rtgslens.ap.gov.in/RTGSAngular/#/" target="_blank" class="tile"><h3><i class="fa-solid fa-eye" style="color:#6f42c1;"></i>RTGS Lens</h3><p>An integrated dashboard for Chief Minister's review</p></a>
+        <a href="https://dashboard.abdm.gov.in/abdm/" target="_blank" class="tile"><h3><i class="fa-solid fa-heartbeat ic-red"></i>Ayushman Bharath Dashboard</h3><p>Healthcare coverage and schemes dashboard.</p></a>
+        <a href="https://dashboard.drntrvaidyaseva.ap.gov.in/" target="_blank" class="tile"><h3><i class="fa-solid fa-hospital ic-cyan"></i>NTR Vaidya Seva Dashboard</h3><p>Health services for citizens.</p></a>
+        <a href="https://apchfw.ap.gov.in/apchfw-dashboard/" target="_blank" class="tile"><h3><i class="fa-solid fa-stethoscope ic-green"></i>Health & Family Welfare Dashboard</h3><p>Comprehensive family health statistics.</p></a>
+        <a href="https://eaushadhiap.dcservices.in/" target="_blank" class="tile"><h3><i class="fa-solid fa-pills ic-purple"></i>e-Aushadhi Inventory Dashboard</h3><p>Drug inventory management system.</p></a>
+        <a href="https://pfms.nic.in/SitePages/Users/LoginDetails/Login.aspx" target="_blank" class="tile"><h3><i class="fa-solid fa-wallet ic-teal"></i>Public Financial Management System</h3><p>Tracking of state finances.</p></a>
+        <a href="https://cfms.ap.gov.in/" target="_blank" class="tile"><h3><i class="fa-solid fa-sack-dollar ic-fd"></i>Comprehensive Financial Management System</h3><p>End-to-end financial monitoring.</p></a>
+        <a href="https://nidhi.apcfss.in/login" target="_blank" class="tile"><h3><i class="fa-solid fa-gem ic-pink"></i>Nidhi Portal</h3><p>A Dashboard on HR data of Andhra Pradesh</p></a>
+        <a href="https://epos.ap.gov.in/PowerBI/Dashboard.jsp" target="_blank" class="tile"><h3><i class="fa-solid fa-truck ic-blue"></i>Civil Supplies Corporation</h3><p>Monitoring of civil supplies distribution.</p></a>
+        <a href="https://aptis.apct.gov.in/apdashboard/" target="_blank" class="tile"><h3><i class="fa-solid fa-receipt ic-green"></i>Commercial Tax Dashboard</h3><p>Tracking state tax collections and analysis.</p></a>
+        <a href="https://rtgslens.ap.gov.in/RTGSAngular/#/" target="_blank" class="tile"><h3><i class="fa-solid fa-eye ic-purple"></i>RTGS Lens</h3><p>An integrated dashboard for Chief Minister's review</p></a>
       </div>
     </div>
 
     <!-- Personal Section -->
     <div class="tab-pane fade" id="personal" role="tabpanel">
       <div class="tiles">
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-image" style="color:#17a2b8;"></i>My Gallery</h3><p>One place to view some of my photo collections</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-calendar-days" style="color:#007bff;"></i>My Schedules</h3><p>Upcoming Appointments and meetings</p></a>
-        <a href="https://ttdletters-mrc.netlify.app/" target="_blank" class="tile"><h3><i class="fa-solid fa-envelope-open-text" style="color:#fd7e14;"></i>My TTD Letters</h3><p>A report which helps in planning the issue of TTD Letters</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-envelope" style="color:#cc3fb9;"></i>My CMPs</h3><p>A place to view all the letter addressed by me to departments</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-bell" style="color:#dc3545;"></i>My Reminders</h3><p>All my key tasks which need special attention</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-people-group" style="color:#199f12;"></i>My Core Team</h3><p>Details of my Team members who supports my professional & Personal Tasks</p></a>
-        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-file" style="color:#43a7bd;"></i>My Documents</h3><p>A place where all my important documents organizer for faster retrival</p></a>
+        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-image ic-cyan"></i>My Gallery</h3><p>One place to view some of my photo collections</p></a>
+        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-calendar-days ic-blue"></i>My Schedules</h3><p>Upcoming Appointments and meetings</p></a>
+        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-envelope ic-violet"></i>My CMPs</h3><p>A place to view all the letter addressed by me to departments</p></a>
+        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-bell ic-red"></i>My Reminders</h3><p>All my key tasks which need special attention</p></a>
+        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-people-group ic-indigo"></i>My Core Team</h3><p>Details of my Team members who supports my professional & Personal Tasks</p></a>
+        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-file ic-sky"></i>My Documents</h3><p>A place where all my important documents organized for faster retrieval</p></a>
       </div>
     </div>
+
+    <!-- Under Development Section -->
+    <div class="tab-pane fade" id="underdev" role="tabpanel">
+      <div class="tiles">
+        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-clipboard-list ic-purple"></i>Manifesto Monitoring Module</h3><p>Tracking implementation of manifesto promises.</p></a>
+        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-file-signature ic-teal"></i>Election Affidavits Analysis</h3><p>Analysis of election affidavits.</p></a>
+        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-coins ic-fd"></i>Budget Analysis</h3><p>State budget analysis and insights.</p></a>
+        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-chart-line ic-cyan"></i>States Own Revenue Analysis</h3><p>Revenue analysis of the state.</p></a>
+        <a href="#" target="_blank" class="tile"><h3><i class="fa-solid fa-money-check-dollar ic-pink"></i>Employees Payments Monitoring Module</h3><p>Monitoring employee payments across departments.</p></a>
+      </div>
+    </div>
+
   </div>
 
   <!-- Modal -->
   <div class="modal-backdrop-custom" id="customModal">
     <div class="modal-card">
-      <h4>🚧 Dashboard Under Development</h4>
+      <h4>Dashboard Under Development</h4>
       <p>This dashboard is currently under development.<br>Please visit the site later.</p>
       <button onclick="closeModal()">Okay</button>
     </div>
@@ -269,26 +344,20 @@
   <script>
     // Modal logic
     const modal = document.getElementById('customModal');
-    const tiles = document.querySelectorAll('.tile');
 
-    tiles.forEach(tile => {
+    document.querySelectorAll('.tile').forEach(tile => {
+      const underDev = tile.getAttribute('href') === '#';
+
       tile.addEventListener('click', function(e) {
-        if (this.getAttribute('href') === '#') {
+        if (underDev) {
           e.preventDefault();
           modal.style.display = 'flex';
         }
       });
-    });
 
-    document.querySelectorAll('.tile').forEach(tile => {
       const banner = document.createElement('div');
-      if (tile.getAttribute('href') === '#') {
-        banner.className = "banner dev";
-        banner.textContent = "UNDER DEVELOPMENT";
-      } else {
-        banner.className = "banner live";
-        banner.textContent = "LIVE";
-      }
+      banner.className = underDev ? "banner dev" : "banner live";
+      banner.textContent = underDev ? "UNDER DEVELOPMENT" : "LIVE";
       tile.appendChild(banner);
     });
 
